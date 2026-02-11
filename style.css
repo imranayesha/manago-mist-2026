@@ -61,3 +61,7 @@ ul {
 li {
   margin: 8px 0;
 }
+.card p {
+  opacity: 0.9;
+  font-size: 14px;
+}

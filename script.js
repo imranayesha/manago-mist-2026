@@ -19,12 +19,11 @@ setInterval(function() {
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSDDlAIBb-jfG2fpkBpE22dzit5YyH044L0ZnI62Q5dkjWWQkwmYH9p3gXj8VtINFCAWEay6YEx6Vsz/pub?gid=2035330145&single=true&output=csv";
 
 function fetchStatus() {
-  fetch(sheetURL)
+  fetch(sheetURL + "&t=" + new Date().getTime())
     .then(response => response.text())
     .then(data => {
       let rows = data.trim().split("\n");
 
-      // Remove header row if exists
       if (rows.length > 1) {
         rows.shift();
       }
@@ -32,13 +31,16 @@ function fetchStatus() {
       let lastRow = rows[rows.length - 1];
 
       if (lastRow) {
-        document.getElementById("tripStatus").innerHTML = "🚍 " + lastRow;
+        document.getElementById("tripStatus").innerHTML =
+          "🚍 " + lastRow;
       } else {
-        document.getElementById("tripStatus").innerHTML = "🕒 Waiting for update...";
+        document.getElementById("tripStatus").innerHTML =
+          "🕒 Waiting for update...";
       }
     })
     .catch(error => {
-      document.getElementById("tripStatus").innerHTML = "⚠️ Unable to load status";
+      document.getElementById("tripStatus").innerHTML =
+        "⚠️ Unable to load status";
     });
 }
 
@@ -47,3 +49,13 @@ fetchStatus();
 
 // Auto refresh every 30 seconds
 setInterval(fetchStatus, 30000);
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  fetchStatus(); // Run immediately
+
+  setInterval(function () {
+    fetchStatus();
+  }, 30000); // every 30 seconds
+
+});
